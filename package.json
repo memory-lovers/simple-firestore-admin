@@ -5,14 +5,20 @@
   "author": "Memory Lovers",
   "private": true,
   "scripts": {
-    "dev": "nuxt",
-    "build": "nuxt build",
-    "start": "nuxt start",
-    "generate": "nuxt generate"
+    "dev": "nuxt-ts",
+    "build": "nuxt-ts build",
+    "start": "nuxt-ts start",
+    "generate": "nuxt-ts generate"
   },
   "dependencies": {
+    "@nuxt/typescript-runtime": "^0.2.2",
     "nuxt": "^2.0.0",
     "nuxt-buefy": "^0.3.2"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@nuxt/typescript-build": "^0.3.2",
+    "@firebase/firestore-types": "^1.6.2",
+    "node-sass": "^4.13.0",
+    "sass-loader": "^8.0.0"
+  }
 }
