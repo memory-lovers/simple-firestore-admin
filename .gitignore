@@ -227,3 +227,5 @@ typings/
 !.vscode/extensions.json
 
 
+### Custom Settings
+.key/
