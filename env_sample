@@ -1,0 +1,5 @@
+# Copy this file with file name '.env' and set your login info.
+
+## ex. CREDENTIAL_PATH=./credential.json
+CREDENTIAL_PATH=YOUR_CREDENTIAL_PATH
+
