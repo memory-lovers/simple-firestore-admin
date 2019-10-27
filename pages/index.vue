@@ -4,16 +4,20 @@
       <SearchForm :loading="isSearch" @confirm="onConfirm" />
     </div>
     <hr />
-    <div></div>
+    <div>
+      <ResultList />
+    </div>
   </section>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from "nuxt-property-decorator";
-import SearchForm from "~/components/molecules/SearchForm.vue";
 import { SearchFormItem } from "~/types";
 
-@Component({ components: { SearchForm } })
+import SearchForm from "~/components/molecules/SearchForm.vue";
+import ResultList from "~/components/organisms/ResultList.vue";
+
+@Component({ components: { SearchForm, ResultList } })
 export default class IndexPaage extends Vue {
   private isSearch: boolean = false;
 
