@@ -12,6 +12,8 @@
   },
   "dependencies": {
     "@nuxt/typescript-runtime": "^0.2.2",
+    "dayjs": "^1.8.16",
+    "dotenv": "^8.2.0",
     "nuxt": "^2.0.0",
     "nuxt-buefy": "^0.3.2",
     "nuxt-property-decorator": "^2.5.0"
