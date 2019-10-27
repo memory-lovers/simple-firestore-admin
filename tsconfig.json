@@ -12,10 +12,11 @@
     "noEmit": true,
     "baseUrl": ".",
     "paths": {
-      "~/*": ["./*"],
-      "@/*": ["./*"]
+      "~/*": ["./app/*"],
+      "@/*": ["./app/*"]
     },
     "types": ["@types/node", "@nuxt/types"]
   },
+  "include": ["app/**/*"],
   "exclude": ["node_modules"]
 }
