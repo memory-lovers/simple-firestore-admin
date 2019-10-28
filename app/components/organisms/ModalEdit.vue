@@ -22,9 +22,9 @@
                 open-on-focus
                 :data="filteredFields(data.field)"
                 size="is-small"
+                @select="val => onSelectField(data, val)"
               />
 
-              <!-- <b-input v-model="data.value" size="is-small"></b-input> -->
               <InputFieldType v-model="data.value" :type="data.type" />
 
               <b-select v-model="data.type" size="is-small">
@@ -81,7 +81,7 @@ import {
 import { FIELD_TYPE } from "~/src/enums";
 
 import InputFieldType from "~/components/atom/InputFieldType.vue";
-import { strFieldValue } from "~/src/FieldValueHelper";
+import { strFieldValue, findFieldType } from "~/src/FieldValueHelper";
 
 const flatten = require("flat");
 const DEFAUT_ITEM: UpdateParamData = {
@@ -97,6 +97,7 @@ export default class ModalEdit extends Vue {
   @Prop({ default: "" }) error!: string;
 
   private dataList: UpdateParam = [Object.assign({}, DEFAUT_ITEM)];
+  private flattenData = flatten(this.item.data);
 
   private fieldTypes: FIELD_TYPE[] = [
     FIELD_TYPE.STR,
@@ -123,7 +124,7 @@ export default class ModalEdit extends Vue {
 
   private filteredFields(val: string) {
     if (!this.item) return [];
-    return Object.keys(flatten(this.item.data)).filter(option => {
+    return Object.keys(this.flattenData).filter(option => {
       return option.toLowerCase().indexOf(val.toLowerCase()) >= 0;
     });
   }
@@ -143,6 +144,15 @@ export default class ModalEdit extends Vue {
   // ****************************************************
   private onClickConfirm() {
     if (!!this.item) this.sendConfirmEdit();
+  }
+
+  private onSelectField(data: UpdateParamData, selected: string) {
+    console.info(`onSelectField: selected=${selected}`);
+    if (selected in this.flattenData) {
+      const selectedData = this.flattenData[selected];
+      data.type = findFieldType(selectedData);
+      this.$nextTick(() => (data.value = selectedData));
+    }
   }
 
   // ****************************************************
@@ -165,7 +175,9 @@ export default class ModalEdit extends Vue {
   // ****************************************************
   @Watch("item")
   private onChangeItem() {
+    this.item.collection = "books"
     this.dataList = [Object.assign({}, DEFAUT_ITEM)];
+    this.flattenData = flatten(this.item.data);
   }
 }
 </script>
