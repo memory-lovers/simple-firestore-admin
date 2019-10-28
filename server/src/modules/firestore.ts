@@ -26,6 +26,7 @@ exports.fetchSelect = async function(
 
   return {
     result: items.docs.map((v: firestore.QueryDocumentSnapshot) => ({
+      collection: form.collection,
       id: v.id,
       data: v.data(),
       createAt: v.createTime,

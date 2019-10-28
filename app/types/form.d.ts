@@ -13,6 +13,7 @@ export interface SearchFormItem {
 }
 
 export interface ResultData {
+  collection: string;
   id: string;
   data: any;
   createAt: any;
