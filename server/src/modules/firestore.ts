@@ -1,12 +1,19 @@
 import { firestore } from "firebase-admin";
-import { SearchFormItem, SearchResult } from "../../../app/types/form";
-const admin = require("./firebase");
+import { FIELD_TYPE } from "~/enums";
+import {
+  SearchFormItem,
+  SearchResult,
+  UpdateRequest,
+  UpdateParamData,
+  DeleteRequest
+} from "~/form";
+import admin from "./firebase";
 const db = admin.firestore();
 
-exports.fetchSelect = async function(
-  form: SearchFormItem,
-  size: number = 100
-): Promise<SearchResult> {
+/**
+ * select
+ */
+export async function fetchSelect(form: SearchFormItem, size: number = 100): Promise<SearchResult> {
   // set query
   let query = db.collection(form.collection).limit(size);
   if (!!form.orderField) {
@@ -33,4 +40,29 @@ exports.fetchSelect = async function(
       updateAt: v.updateTime
     }))
   };
-};
+}
+
+function getFieldValue(data: UpdateParamData) {
+  return data.value;
+}
+
+/**
+ * update
+ */
+export async function update(req: UpdateRequest) {
+  const docRef = db.collection(req.collection).doc(req.docId);
+  const param = req.param.reduce((acc, v) => {
+    acc[v.field] = getFieldValue(v);
+    return acc;
+  }, {});
+  console.info(`updateParam: ${JSON.stringify(param, null, 2)}`);
+  await docRef.update(param);
+}
+
+/**
+ * delete
+ */
+export async function del(req: DeleteRequest) {
+  const docRef = db.collection(req.collection).doc(req.docId);
+  await docRef.delete();
+}

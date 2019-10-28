@@ -8,4 +8,4 @@ if (!!process.env.CREDENTIAL_PATH) {
   console.error(`Error: credential file is not found`);
 }
 
-module.exports = admin;
+export default admin;

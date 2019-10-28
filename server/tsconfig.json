@@ -2,7 +2,7 @@
   "compilerOptions": {
     "outDir": "./dist",
     "target": "esnext",
-    "module": "esnext",
+    "module": "commonjs",
     "moduleResolution": "node",
     "lib": ["esnext", "esnext.asynciterable", "dom"],
     "resolveJsonModule": true,
@@ -15,7 +15,8 @@
     "noEmit": true,
     "baseUrl": ".",
     "paths": {
-      "~/*": ["src/types/*", "../app/types/*"]
+      "*": ["node_modules/*"],
+      "~/*": ["src/*", "../app/types/*", "../app/src/*"]
     }
   },
   "include": ["./src/**/*"],
