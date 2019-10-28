@@ -1,4 +1,4 @@
-import { WHERE_OP, ORDER_TYPE, FIELD_TYPE } from "~/enums";
+import { WHERE_OP, ORDER_TYPE, FIELD_TYPE } from "~/src/enums";
 
 export interface SearchFormItem {
   collection: string;
@@ -26,7 +26,7 @@ export interface SearchResult {
 
 export interface UpdateParamData {
   field: string;
-  value: any;
+  value: string | number | boolean;
   type: FIELD_TYPE;
 }
 export type UpdateParam = UpdateParamData[];

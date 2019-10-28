@@ -4,21 +4,29 @@
       <p class="modal-card-title">Update</p>
     </header>
     <section class="modal-card-body">
+      <div class="notification is-danger" v-if="!!error">
+        <button class="delete"></button>
+        <span>{{error}}</span>
+      </div>
+
       <div class="preview-item">
         <pre>{{previewItem}}</pre>
       </div>
+
       <div class="update-form">
         <template v-for="(data, index) in dataList">
           <b-field :key="index">
             <b-field grouped>
-              <!-- <b-input v-model="data.field" size="is-small"></b-input> -->
               <b-autocomplete
                 v-model="data.field"
                 open-on-focus
                 :data="filteredFields(data.field)"
                 size="is-small"
-              ></b-autocomplete>
-              <b-input v-model="data.value" size="is-small"></b-input>
+              />
+
+              <!-- <b-input v-model="data.value" size="is-small"></b-input> -->
+              <InputFieldType v-model="data.value" :type="data.type" />
+
               <b-select v-model="data.type" size="is-small">
                 <template v-for="type in fieldTypes">
                   <option :value="type" :key="type">{{type}}</option>
@@ -72,6 +80,9 @@ import {
 } from "~/types";
 import { FIELD_TYPE } from "~/src/enums";
 
+import InputFieldType from "~/components/atom/InputFieldType.vue";
+import { strFieldValue } from "~/src/FieldValueHelper";
+
 const flatten = require("flat");
 const DEFAUT_ITEM: UpdateParamData = {
   field: "",
@@ -79,10 +90,11 @@ const DEFAUT_ITEM: UpdateParamData = {
   type: FIELD_TYPE.STR
 };
 
-@Component
+@Component({ components: { InputFieldType } })
 export default class ModalEdit extends Vue {
-  @Prop({ default: null }) item!: ResultData | null;
+  @Prop({ required: true }) item!: ResultData;
   @Prop({ default: false }) loading!: boolean;
+  @Prop({ default: "" }) error!: string;
 
   private dataList: UpdateParam = [Object.assign({}, DEFAUT_ITEM)];
 
@@ -101,12 +113,10 @@ export default class ModalEdit extends Vue {
   }
 
   private get previewUpdate() {
-    let str = "doc.update({\n";
-    for (let data of this.dataList) {
-      const val =
-        data.type === FIELD_TYPE.STR ? `"${data.value}"` : `${data.value}`;
-      str += `    "${data.field}": ${val}\n`;
-    }
+    let str = `collection("${this.item.collection}").doc("${this.item.id}").update({\n`;
+    this.dataList.forEach(v => {
+      str += `    "${v.field}": ${strFieldValue(v.type, v.value)}\n`;
+    });
     str += "});";
     return str;
   }
@@ -141,8 +151,12 @@ export default class ModalEdit extends Vue {
   @Emit("confirmEdit")
   private sendConfirmEdit(): UpdateRequest {
     return {
+      collection: !!this.item ? this.item.collection : "",
       docId: !!this.item ? this.item.id : "",
-      param: this.dataList
+      param: this.dataList.map(v => {
+        if (v.type === FIELD_TYPE.NUM) v.value = Number(v.value);
+        return v;
+      })
     };
   }
 
@@ -166,11 +180,11 @@ export default class ModalEdit extends Vue {
 }
 
 .preview-item {
-  max-height: 200px;
+  max-height: 30vh;
   overflow: hidden;
   pre {
     height: 100%;
-    max-height: 200px;
+    max-height: 30vh;
     overflow: scroll;
   }
 }

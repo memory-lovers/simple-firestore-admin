@@ -28,7 +28,12 @@
       aria-modal
       :can-cancel="!loading"
     >
-      <ModalEdit :item="modalEditItem" :loading="loading" @confirmEdit="edit" />
+      <ModalEdit
+        :item="modalEditItem"
+        :error="modalEditError"
+        :loading="loading"
+        @confirmEdit="edit"
+      />
     </b-modal>
   </section>
 </template>
@@ -57,6 +62,7 @@ export default class IndexPaage extends Vue {
 
   private modalEditActive: boolean = false;
   private modalEditItem: object = {};
+  private modalEditError: string = "";
 
   // ****************************************************
   // * computed
@@ -69,19 +75,24 @@ export default class IndexPaage extends Vue {
     console.info(`onConfirm: request=${JSON.stringify(request, null, 2)}`);
     try {
       this.loading = true;
-      // const res = await this.$axios.post("/api/search", request);
-      const res = require("../../.dummy/data.json");
+      const res = await this.$axios.post("/api/select", request);
+      // const res = require("../../.dummy/data.json");
 
       this.items = res.data.result;
       this.req = request;
-      // this.hasNext = res.data.result.length > 0;
-      this.hasNext = false;
+      this.hasNext = res.data.result.length > 0;
+      // this.hasNext = false;
 
       this.identifer += 1;
       this.error = "";
     } catch (error) {
-      console.error(`Error: ${error}`, error);
-      this.error = `${error}`;
+      if (!!error.response) {
+        console.error(`Error: ${error.response.data.msg}`, error.response);
+        this.error = `${error.response.data.msg}`;
+      } else {
+        console.error(`Error: ${error}`, error);
+        this.error = `${error}`;
+      }
     } finally {
       this.loading = false;
     }
@@ -91,6 +102,7 @@ export default class IndexPaage extends Vue {
     console.info(`onClickEdit: item=${JSON.stringify(item, null, 2)}`);
     this.modalEditActive = true;
     this.modalEditItem = item;
+    this.modalEditError = "";
   }
 
   private async onClickDel(item: any) {
@@ -119,8 +131,13 @@ export default class IndexPaage extends Vue {
       this.hasNext = res.data.result.length > 0;
       this.error = "";
     } catch (error) {
-      console.error(`Error: ${error}`, error);
-      this.error = `${error}`;
+      if (!!error.response) {
+        console.error(`Error: ${error.response.data.msg}`, error.response);
+        this.error = `${error.response.data.msg}`;
+      } else {
+        console.error(`Error: ${error}`, error);
+        this.error = `${error}`;
+      }
     } finally {
       this.loading = false;
     }
@@ -130,15 +147,27 @@ export default class IndexPaage extends Vue {
     console.info(`edit: ${JSON.stringify(request, null, 2)}`);
     if (!request.docId) return;
 
+    let res;
     try {
       this.loading = true;
-      // const res = await this.$axios.post("/api/select", request);
-      // TODO: call update
+      res = await this.$axios.post("/api/update", request);
+
+      // apply changes
+      const index = this.items.findIndex(v => v.id === request.docId);
+      request.param.forEach(v => {
+        this.items[index].data[v.field] = v.value;
+      });
 
       this.modalEditActive = false;
+      this.modalEditError = "";
     } catch (error) {
-      console.error(`Error: ${error}`, error);
-      this.error = `${error}`;
+      if (!!error.response) {
+        console.error(`Error: ${error.response.data.msg}`, error.response);
+        this.modalEditError = `${error.response.data.msg}`;
+      } else {
+        console.error(`Error: ${error}`, error);
+        this.modalEditError = `${error}`;
+      }
     } finally {
       this.loading = false;
     }

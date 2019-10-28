@@ -91,7 +91,7 @@ export default class ResultList extends Vue {
   // ****************************************************
   private async onPageChange(page: number) {
     this.page = page;
-    if (this.items.length < this.page * this.parPage) {
+    if (this.page != 1 && this.items.length < (this.page - 1) * this.parPage) {
       this.sendLoad();
     }
   }
