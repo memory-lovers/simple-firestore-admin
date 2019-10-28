@@ -3,7 +3,7 @@ import { SearchFormItem, SearchResult } from "../../../app/types/form";
 const admin = require("./firebase");
 const db = admin.firestore();
 
-exports.fetchData = async function(
+exports.fetchSelect = async function(
   form: SearchFormItem,
   size: number = 100
 ): Promise<SearchResult> {

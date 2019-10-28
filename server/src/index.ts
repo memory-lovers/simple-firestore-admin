@@ -13,8 +13,8 @@ const port = 8080; // default port to listen
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// search
-app.post("/search", async (req: Request, res: Response) => {
+// select
+app.post("/select", async (req: Request, res: Response) => {
   console.log(req.body);
   try {
     const item = helper.toQueryForm(req);
@@ -24,7 +24,7 @@ app.post("/search", async (req: Request, res: Response) => {
       return;
     }
 
-    const result = await firestore.fetchData(item);
+    const result = await firestore.fetchSelect(item);
     res.send(result);
   } catch (error) {
     console.error(`Error: ${error}`, error);

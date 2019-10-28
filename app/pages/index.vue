@@ -112,7 +112,7 @@ export default class IndexPaage extends Vue {
       const lastId = !!order ? last.data[order] : last.id;
       const param = Object.assign({}, this.req, { lastId: lastId });
 
-      const res = await this.$axios.post("/api/search", param);
+      const res = await this.$axios.post("/api/select", param);
       console.info(`res=${JSON.stringify(res, null, 2)}`);
 
       this.items.push(...res.data.result);
@@ -132,7 +132,7 @@ export default class IndexPaage extends Vue {
 
     try {
       this.loading = true;
-      // const res = await this.$axios.post("/api/search", request);
+      // const res = await this.$axios.post("/api/select", request);
       // TODO: call update
 
       this.modalEditActive = false;
