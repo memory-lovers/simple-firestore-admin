@@ -13,8 +13,8 @@ const port = 8080; // default port to listen
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// get
-app.post("/get", async (req: Request, res: Response) => {
+// search
+app.post("/search", async (req: Request, res: Response) => {
   console.log(req.body);
   try {
     const item = helper.toQueryForm(req);

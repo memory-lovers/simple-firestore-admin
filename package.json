@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@nuxt/typescript-runtime": "^0.2.2",
+    "@nuxtjs/axios": "^5.8.0",
     "dayjs": "^1.8.16",
     "dotenv": "^8.2.0",
     "nuxt": "^2.0.0",

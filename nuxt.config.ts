@@ -41,7 +41,9 @@ const config: Configuration = {
    */
   modules: [
     // Doc: https://buefy.github.io/#/documentation
-    "nuxt-buefy"
+    "nuxt-buefy",
+    // Doc: https://axios.nuxtjs.org/usage
+    "@nuxtjs/axios"
   ],
 
   /**
@@ -51,6 +53,25 @@ const config: Configuration = {
    */
   buefy: {
     css: false
+  },
+
+  /*
+   ** Axios module configuration
+   */
+  axios: {
+    // See https://github.com/nuxt-community/axios-module#options
+    proxy: true,
+    debug: true,
+    timeout: 1000,
+  },
+
+  proxy: {
+    "/api": {
+      target: "http://localhost:8080",
+      pathRewrite: {
+        "^/api": "/"
+      }
+    }
   },
 
   /*

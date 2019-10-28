@@ -9,10 +9,16 @@ export interface SearchFormItem {
 
   orderField?: string;
   orderType?: ORDER_TYPE;
+  lastId?: any;
+}
+
+export interface ResultData {
+  id: string;
+  data: any;
+  createAt: any;
+  updateAt: any;
 }
 
 export interface SearchResult {
-  hasNext: boolean;
-  lastId: any | null;
-  result: any[];
+  result: ResultData[];
 }

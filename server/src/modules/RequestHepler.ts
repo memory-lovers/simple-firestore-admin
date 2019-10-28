@@ -15,6 +15,10 @@ class RequestHepler {
       item.orderField = req.body.orderField;
       item.orderType = req.body.orderType;
     }
+
+    if (!!req.body.lastId) {
+      item.lastId = req.body.lastId;
+    }
     return item;
   }
 }
