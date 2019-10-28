@@ -8,3 +8,9 @@ export const enum ORDER_TYPE {
   ASC = "ASC",
   DESC = "DESC"
 }
+
+export const enum FIELD_TYPE {
+  STR = "string",
+  NUM = "number",
+  BOOL = "boolean"
+}

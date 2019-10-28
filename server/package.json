@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node dist/index.js",
+    "serve": "ts-node src/index.ts",
     "dev": "nodemon -L",
     "ts-node": "ts-node",
     "tsc": "tsc",

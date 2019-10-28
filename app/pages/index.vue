@@ -5,56 +5,101 @@
     </div>
     <hr />
     <div>
+      <div class="notification is-danger" v-if="!!error">
+        <button class="delete" @click="error = ''"></button>
+        <span>{{error}}</span>
+      </div>
       <ResultList
         :identifer="identifer"
         :items="items"
         :hasNext="hasNext"
         :loading="loading"
         @load="loadData"
+        @edit="onClickEdit"
+        @del="onClickDel"
       />
     </div>
+
+    <b-modal
+      :active.sync="modalEditActive"
+      has-modal-card
+      trap-focus
+      aria-role="dialog"
+      aria-modal
+      :can-cancel="!loading"
+    >
+      <ModalEdit :item="modalEditItem" :loading="loading" @confirmEdit="edit" />
+    </b-modal>
   </section>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from "nuxt-property-decorator";
-import { SearchFormItem, SearchResult, ResultData } from "~/types";
+import {
+  SearchFormItem,
+  SearchResult,
+  ResultData,
+  UpdateRequest
+} from "~/types";
 
 import SearchForm from "~/components/molecules/SearchForm.vue";
 import ResultList from "~/components/organisms/ResultList.vue";
+import ModalEdit from "~/components/organisms/ModalEdit.vue";
 
-@Component({ components: { SearchForm, ResultList } })
+@Component({ components: { SearchForm, ResultList, ModalEdit } })
 export default class IndexPaage extends Vue {
   private loading: boolean = false;
   private items: ResultData[] = [];
   private req: SearchFormItem | null = null;
   private hasNext: boolean = false;
   private identifer: number = 0;
+  private error: string = "";
+
+  private modalEditActive: boolean = false;
+  private modalEditItem: object = {};
 
   // ****************************************************
   // * computed
   // ****************************************************
 
   // ****************************************************
-  // * methods
+  // * methods: onClick
   // ****************************************************
   private async onConfirm(request: SearchFormItem) {
     console.info(`onConfirm: request=${JSON.stringify(request, null, 2)}`);
     try {
       this.loading = true;
-      const res = await this.$axios.post("/api/search", request);
+      // const res = await this.$axios.post("/api/search", request);
+      const res = require("../../.dummy/data.json");
 
       this.items = res.data.result;
       this.req = request;
-      this.hasNext = res.data.result.length > 0;
+      // this.hasNext = res.data.result.length > 0;
+      this.hasNext = false;
 
       this.identifer += 1;
+      this.error = "";
     } catch (error) {
       console.error(`Error: ${error}`, error);
+      this.error = `${error}`;
     } finally {
       this.loading = false;
     }
   }
+
+  private async onClickEdit(item: any) {
+    console.info(`onClickEdit: item=${JSON.stringify(item, null, 2)}`);
+    this.modalEditActive = true;
+    this.modalEditItem = item;
+  }
+
+  private async onClickDel(item: any) {
+    console.info(`onClickDel: item=${JSON.stringify(item, null, 2)}`);
+  }
+
+  // ****************************************************
+  // * methods
+  // ****************************************************
   private async loadData() {
     console.info(`loadData`);
     try {
@@ -72,8 +117,28 @@ export default class IndexPaage extends Vue {
 
       this.items.push(...res.data.result);
       this.hasNext = res.data.result.length > 0;
+      this.error = "";
     } catch (error) {
       console.error(`Error: ${error}`, error);
+      this.error = `${error}`;
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  private async edit(request: UpdateRequest) {
+    console.info(`edit: ${JSON.stringify(request, null, 2)}`);
+    if (!request.docId) return;
+
+    try {
+      this.loading = true;
+      // const res = await this.$axios.post("/api/search", request);
+      // TODO: call update
+
+      this.modalEditActive = false;
+    } catch (error) {
+      console.error(`Error: ${error}`, error);
+      this.error = `${error}`;
     } finally {
       this.loading = false;
     }

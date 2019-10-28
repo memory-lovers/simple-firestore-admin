@@ -31,12 +31,12 @@
 
       <b-field>
         <p class="control btn-search">
-          <button
-            class="button is-primary"
-            :class="{'is-loading': loading}"
+          <b-button
+            type="is-primary"
+            :loading="loading"
             :disabled="loading"
             @click="onConfirm"
-          >Search</button>
+          >Search</b-button>
         </p>
       </b-field>
     </div>

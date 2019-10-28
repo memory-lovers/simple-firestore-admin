@@ -36,15 +36,27 @@
         </template>
 
         <b-table-column field="action" label="Action" width="110">
-          <b-button type="is-info" :loading="loading" :disabled="loading" icon-left="pencil"></b-button>
-          <b-button type="is-danger" :loading="loading" :disabled="loading" icon-left="delete"></b-button>
+          <b-button
+            type="is-info"
+            :loading="loading"
+            :disabled="loading"
+            icon-left="pencil"
+            @click="sendEdit(props.row)"
+          />
+          <b-button
+            type="is-danger"
+            :loading="loading"
+            :disabled="loading"
+            icon-left="delete"
+            @click="sendDel(props.row)"
+          />
         </b-table-column>
       </template>
 
       <template slot="detail" slot-scope="props">
-        <article class="media">
+        <div>
           <pre>{{props.row.data}}</pre>
-        </article>
+        </div>
       </template>
     </b-table>
   </div>
@@ -96,6 +108,19 @@ export default class ResultList extends Vue {
   @Emit("load")
   private sendLoad() {}
 
+  @Emit("edit")
+  private sendEdit(item: any) {
+    return item;
+  }
+
+  @Emit("del")
+  private sendDel(item: any) {
+    return item;
+  }
+
+  // ****************************************************
+  // * watch
+  // ****************************************************
   @Watch("identifer")
   private onChangeIdentifer() {
     if (this.items.length > 0) {
