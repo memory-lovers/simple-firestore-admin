@@ -1,4 +1,6 @@
-require("dotenv").config();
+import * as path from "path";
+require("dotenv").config({ path: path.resolve(process.cwd(), "../.env") });
+
 import { Request, Response, Application } from "express";
 import { UpdateRequest, DeleteRequest, SearchFormItem } from "~/form";
 import * as HttpStatus from "http-status-codes";
@@ -8,7 +10,7 @@ const bodyParser = require("body-parser");
 const express = require("express");
 
 const app: Application = express();
-const port = 8080; // default port to listen
+const port = process.env.SERVER_PORT || 8080; // default port to listen
 
 // setup body-parser
 app.use(bodyParser.urlencoded({ extended: true }));
