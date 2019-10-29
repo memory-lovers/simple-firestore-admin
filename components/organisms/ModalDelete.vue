@@ -29,11 +29,11 @@
 
 <script lang="ts">
 import { Component, Vue, Prop, Emit } from "nuxt-property-decorator";
-import { ResultData, DeleteRequest } from "~/types";
+import { DeleteRequest, DocData } from "~/types";
 
 @Component
 export default class ModalDelete extends Vue {
-  @Prop({ required: true }) item!: ResultData;
+  @Prop({ required: true }) item!: DocData;
   @Prop({ default: false }) loading!: boolean;
   @Prop({ default: "" }) error!: string;
 

@@ -53,7 +53,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop, Emit } from "nuxt-property-decorator";
-import { SearchFormItem } from "~/types";
+import { SelectRequest } from "~/types";
 import { WHERE_OP, ORDER_TYPE, FIELD_TYPE } from "~/src/enums";
 import InputFieldType from "~/components/atom/InputFieldType.vue";
 import { strFieldValue } from "~/src/FieldValueHelper";
@@ -104,8 +104,8 @@ export default class SearchForm extends Vue {
   // * emit
   // ****************************************************
   @Emit("confirm")
-  private emitConirm(): SearchFormItem {
-    const item: SearchFormItem = { collection: this.collection };
+  private emitConirm(): SelectRequest {
+    const item: SelectRequest = { collection: this.collection };
 
     if (!!this.whereField && !!this.whereValue) {
       item.whereField = this.whereField;

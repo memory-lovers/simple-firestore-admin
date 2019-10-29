@@ -1,6 +1,6 @@
 import { WHERE_OP, ORDER_TYPE, FIELD_TYPE } from "~/src/enums";
 
-export interface SearchFormItem {
+export interface SelectRequest {
   collection: string;
 
   whereField?: string;
@@ -12,7 +12,7 @@ export interface SearchFormItem {
   lastId?: any;
 }
 
-export interface ResultData {
+export interface DocData {
   collection: string;
   id: string;
   data: any;
@@ -20,8 +20,8 @@ export interface ResultData {
   updateAt: any;
 }
 
-export interface SearchResult {
-  result: ResultData[];
+export interface SelectResponse {
+  result: DocData[];
 }
 
 export interface UpdateParamData {

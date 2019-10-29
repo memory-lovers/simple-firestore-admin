@@ -1,8 +1,8 @@
 import { firestore } from "firebase-admin";
 import { FIELD_TYPE, WHERE_OP } from "~/src/enums";
 import {
-  SearchFormItem,
-  SearchResult,
+  SelectRequest,
+  SelectResponse,
   UpdateRequest,
   UpdateParamData,
   DeleteRequest
@@ -13,31 +13,34 @@ const db = admin.firestore();
 /**
  * select
  */
-export async function fetchSelect(form: SearchFormItem, size: number = 100): Promise<SearchResult> {
+export async function fetchSelect(
+  req: SelectRequest,
+  size: number = 100
+): Promise<SelectResponse> {
   // set query
-  let query = db.collection(form.collection).limit(size);
-  if (!!form.orderField && !!form.whereField) {
+  let query = db.collection(req.collection).limit(size);
+  if (!!req.orderField && !!req.whereField) {
     // using where and order
-    query = query.where(form.whereField, form.whereOp, form.whereValue);
-    query = query.orderBy(form.orderField, form.orderType);
-    if (!!form.lastId) query = query.startAfter(form.lastId);
-  } else if (!!form.whereField) {
+    query = query.where(req.whereField, req.whereOp, req.whereValue);
+    query = query.orderBy(req.orderField, req.orderType);
+    if (!!req.lastId) query = query.startAfter(req.lastId);
+  } else if (!!req.whereField) {
     // using where only
-    query = query.where(form.whereField, form.whereOp, form.whereValue);
-    if (form.whereOp === WHERE_OP.EQ) {
+    query = query.where(req.whereField, req.whereOp, req.whereValue);
+    if (req.whereOp === WHERE_OP.EQ) {
       query = query.orderBy(admin.firestore.FieldPath.documentId());
-      if (!!form.lastId) return query.startAfter(form.lastId);
+      if (!!req.lastId) return query.startAfter(req.lastId);
     } else {
-      query = query.orderBy(form.whereField);
-      if (!!form.lastId) query = query.startAfter(form.lastId);
+      query = query.orderBy(req.whereField);
+      if (!!req.lastId) query = query.startAfter(req.lastId);
     }
-  } else if (!!form.orderField) {
+  } else if (!!req.orderField) {
     // using order only
-    query = query.orderBy(form.orderField, form.orderType);
-    if (!!form.lastId) query = query.startAfter(form.lastId);
+    query = query.orderBy(req.orderField, req.orderType);
+    if (!!req.lastId) query = query.startAfter(req.lastId);
   } else {
     query = query.orderBy(admin.firestore.FieldPath.documentId());
-    if (!!form.lastId) return query.startAfter(form.lastId);
+    if (!!req.lastId) return query.startAfter(req.lastId);
   }
 
   // execute query
@@ -45,7 +48,7 @@ export async function fetchSelect(form: SearchFormItem, size: number = 100): Pro
 
   return {
     result: items.docs.map((v: firestore.QueryDocumentSnapshot) => ({
-      collection: form.collection,
+      collection: req.collection,
       id: v.id,
       data: v.data(),
       createAt: v.createTime,

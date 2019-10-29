@@ -54,13 +54,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop } from "nuxt-property-decorator";
-import {
-  SearchFormItem,
-  SearchResult,
-  ResultData,
-  UpdateRequest,
-  DeleteRequest
-} from "~/types";
+import { UpdateRequest, DeleteRequest, SelectRequest, DocData } from "~/types";
 
 import SearchForm from "~/components/molecules/SearchForm.vue";
 import ResultList from "~/components/organisms/ResultList.vue";
@@ -70,8 +64,8 @@ import ModalDelete from "~/components/organisms/ModalDelete.vue";
 @Component({ components: { SearchForm, ResultList, ModalEdit, ModalDelete } })
 export default class IndexPaage extends Vue {
   private loading: boolean = false;
-  private items: ResultData[] = [];
-  private req: SearchFormItem | null = null;
+  private items: DocData[] = [];
+  private req: SelectRequest | null = null;
   private hasNext: boolean = false;
   private identifer: number = 0;
   private error: string = "";
@@ -93,7 +87,7 @@ export default class IndexPaage extends Vue {
   // ****************************************************
   // * methods: onClick
   // ****************************************************
-  private async onConfirm(request: SearchFormItem) {
+  private async onConfirm(request: SelectRequest) {
     console.info(`onConfirm: request=${JSON.stringify(request, null, 2)}`);
     try {
       this.loading = true;

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import * as HttpStatus from "http-status-codes";
-import { DeleteRequest, SearchFormItem, UpdateRequest } from "~/types";
+import { DeleteRequest, SelectRequest, UpdateRequest } from "~/types";
 import * as firestore from "./modules/firestore";
 
 import bodyParser from "body-parser";
@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 app.post("/api/select", async (req: Request, res: Response) => {
   console.log(`/select: ${req.body}`);
   try {
-    const item: SearchFormItem = req.body;
+    const item: SelectRequest = req.body;
 
     if (item == null) {
       res.status(HttpStatus.BAD_REQUEST).send({ msg: "invalid param" });

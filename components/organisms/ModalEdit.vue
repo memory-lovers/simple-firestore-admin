@@ -72,12 +72,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop, Emit, Watch } from "nuxt-property-decorator";
-import {
-  UpdateParam,
-  ResultData,
-  UpdateRequest,
-  UpdateParamData
-} from "~/types";
+import { UpdateParam, UpdateRequest, UpdateParamData, DocData } from "~/types";
 import { FIELD_TYPE } from "~/src/enums";
 
 import InputFieldType from "~/components/atom/InputFieldType.vue";
@@ -92,7 +87,7 @@ const DEFAUT_ITEM: UpdateParamData = {
 
 @Component({ components: { InputFieldType } })
 export default class ModalEdit extends Vue {
-  @Prop({ required: true }) item!: ResultData;
+  @Prop({ required: true }) item!: DocData;
   @Prop({ default: false }) loading!: boolean;
   @Prop({ default: "" }) error!: string;
 
