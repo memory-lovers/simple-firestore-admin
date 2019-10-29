@@ -3,7 +3,7 @@
 Simple Firestore Admin Console.
 This is a simple management console that can be used on a local PC.
 
-Since this use Firebase Admin SDK, you can use it just by preparing a private key file.
+Since this use Firebase Admin SDK, you can use it just by preparing a private key file.  
 You can use it without changing any special security rules.
 
 ![DEMO](https://github.com/memory-lovers/simple-firestore-admin/blob/master/_img/demo_simple_firebase_admin.gif)
@@ -36,7 +36,7 @@ $ cp env_sample .evn
 
 please place your private key; ex `./credential.json`, same location as `.evn`
 
-if you don't have private key, you can generate form Firebase Console.
+if you don't have private key, you can generate form Firebase Console.  
 Plese see [Firebase Official Document](https://firebase.google.com/docs/admin/setup#initialize_the_sdk).
 
 3. setting path of your private key into `.env`
