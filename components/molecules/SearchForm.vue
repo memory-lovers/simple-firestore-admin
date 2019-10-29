@@ -38,6 +38,7 @@
 
       <b-field>
         <p class="control btn-search">
+          <b-button :loading="loading" :disabled="loading" @click="onClear">Clear</b-button>
           <b-button
             type="is-primary"
             :loading="loading"
@@ -98,6 +99,17 @@ export default class SearchForm extends Vue {
   // ****************************************************
   private onConfirm() {
     if (!this.loading) this.emitConirm();
+  }
+
+  private onClear() {
+    this.collection = "";
+    this.whereField = "";
+    this.whereOp = WHERE_OP.EQ;
+    this.whereValue = "";
+    this.whereType = FIELD_TYPE.STR;
+
+    this.orderField = "";
+    this.orderType = null;
   }
 
   // ****************************************************

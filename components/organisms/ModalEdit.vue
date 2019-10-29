@@ -20,6 +20,7 @@
               <b-autocomplete
                 v-model="data.field"
                 open-on-focus
+                expanded
                 :data="filteredFields(data.field)"
                 size="is-small"
                 @select="val => onSelectField(data, val)"
@@ -189,6 +190,10 @@ export default class ModalEdit extends Vue {
     max-height: 30vh;
     overflow: scroll;
   }
+}
+
+.modal-card {
+  width: auto;
 }
 
 .modal-card-foot {
