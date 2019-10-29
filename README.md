@@ -29,7 +29,7 @@ $ git clone git@github.com:memory-lovers/simple-firestore-admin.git
 ```sh
 $ cd simple-firestore-admin
 
-$ cp env_sample .evn
+$ cp env_sample .env
 ```
 
 2. place your private key

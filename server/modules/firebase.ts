@@ -1,5 +1,3 @@
-require("dotenv").config();
-
 const admin = require("firebase-admin");
 if (!!process.env.CREDENTIAL_PATH) {
   const path = `${process.env.CREDENTIAL_PATH}`;

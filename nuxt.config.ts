@@ -1,4 +1,5 @@
 import { Configuration } from "@nuxt/types";
+require("dotenv").config();
 
 const config: Configuration = {
   mode: "spa",
