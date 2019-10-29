@@ -26,7 +26,12 @@ const config: Configuration = {
   /*
    ** Global CSS
    */
-  css: ["~/assets/css/buefy.scss", "~/assets/css/transition.scss"],
+  css: [
+    "@fortawesome/fontawesome-free/css/fontawesome.min.css",
+    "@fortawesome/fontawesome-free/css/brands.min.css",
+    "~/assets/css/buefy.scss",
+    "~/assets/css/transition.scss"
+  ],
   /*
    ** Plugins to load before mounting the App
    */

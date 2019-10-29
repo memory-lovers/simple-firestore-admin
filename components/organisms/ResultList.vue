@@ -5,8 +5,10 @@
         v-model="fields"
         :data="filteredFields"
         autocomplete
+        open-on-focus
         icon="label"
         @typing="getFiltered"
+        @focus="getFiltered('')"
       ></b-taginput>
     </b-field>
 
@@ -20,19 +22,18 @@
       :current-page="page"
       pagination-position="both"
       detailed
-      :detail-key="docId"
-      :default-sort="docId"
-      mobile-cards
+      detail-key="id"
+      default-sort="id"
       narrowed
       @page-change="onPageChange"
     >
       <template slot-scope="props">
-        <template v-for="field in allFields">
+        <template v-for="(field, index) in allFields">
           <b-table-column
             :field="field == docId ? field : `data.${field}`"
             :label="field.toUpperCase()"
-            sortable
-            :key="field == docId ? field : `data.${field}`"
+            :sortable="field != docId "
+            :key="`${field}_${index}`"
             :visible="fields.indexOf(field) > -1"
           >{{ field == docId ? props.row.id : props.row.data[field] }}</b-table-column>
         </template>
@@ -56,7 +57,7 @@
       </template>
 
       <template slot="detail" slot-scope="props">
-        <div>
+        <div class="preview-detail">
           <pre>{{props.row.data}}</pre>
         </div>
       </template>
@@ -101,9 +102,11 @@ export default class ResultList extends Vue {
   }
 
   private getFiltered(text: string) {
-    this.filteredFields = this.allFields.filter(v => {
-      return v.toLowerCase().indexOf(text.toLowerCase()) >= 0;
-    });
+    this.filteredFields = this.allFields
+      .filter(v => this.fields.indexOf(v) < 0)
+      .filter(v => {
+        return v.toLowerCase().indexOf(text.toLowerCase()) >= 0;
+      });
   }
 
   // ****************************************************
@@ -138,4 +141,7 @@ export default class ResultList extends Vue {
 </script>
 
 <style lang="scss" scoped>
+.preview-detail {
+  max-width: 96vw;
+}
 </style>

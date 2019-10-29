@@ -98,8 +98,9 @@ export default class IndexPaage extends Vue {
     try {
       this.loading = true;
 
-      const res = await this.$axios.post("api/select", request);
+      const res = await this.$axios.post("/api/select", request);
 
+      if (!res.data || !res.data.result) return;
       // set response
       this.items = res.data.result;
       this.req = request;
@@ -159,8 +160,8 @@ export default class IndexPaage extends Vue {
       const param = Object.assign({}, this.req, { lastId: lastId });
 
       const res = await this.$axios.post("/api/select", param);
-      console.info(`res=${JSON.stringify(res, null, 2)}`);
 
+      if (!res.data || !res.data.result) return;
       this.items.push(...res.data.result);
       this.hasNext = res.data.result.length > 0;
       this.error = "";

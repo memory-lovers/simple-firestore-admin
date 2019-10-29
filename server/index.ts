@@ -24,7 +24,7 @@ app.post("/api/select", async (req: Request, res: Response) => {
     }
 
     const result = await firestore.fetchSelect(item);
-    console.log(`/select: result`, result);
+    // console.log(`/select: result`, result);
     res.send(result);
   } catch (error) {
     console.error(`Error: ${error}`, error);

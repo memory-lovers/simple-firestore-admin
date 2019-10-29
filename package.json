@@ -1,6 +1,6 @@
 {
   "name": "simple-firebase-admin",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Simple Firestore Admin",
   "author": "Memory Lovers",
   "private": true,
@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "@firebase/firestore-types": "^1.6.2",
+    "@fortawesome/fontawesome-free": "^5.11.2",
     "@nuxt/typescript-build": "^0.3.2",
     "@types/body-parser": "^1.17.1",
     "@types/express": "^4.17.1",
