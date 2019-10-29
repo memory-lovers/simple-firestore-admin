@@ -23,7 +23,6 @@
     <b-modal
       :active.sync="modalEditActive"
       has-modal-card
-      trap-focus
       aria-role="dialog"
       aria-modal
       :can-cancel="!loading"
@@ -35,6 +34,21 @@
         @confirmEdit="edit"
       />
     </b-modal>
+
+    <b-modal
+      :active.sync="modalDeleteActive"
+      has-modal-card
+      aria-role="dialog"
+      aria-modal
+      :can-cancel="!loading"
+    >
+      <ModalDelete
+        :item="modalDeleteItem"
+        :error="modalDeleteError"
+        :loading="loading"
+        @confirmDelete="del"
+      />
+    </b-modal>
   </section>
 </template>
 
@@ -44,14 +58,16 @@ import {
   SearchFormItem,
   SearchResult,
   ResultData,
-  UpdateRequest
+  UpdateRequest,
+  DeleteRequest
 } from "~/types";
 
 import SearchForm from "~/components/molecules/SearchForm.vue";
 import ResultList from "~/components/organisms/ResultList.vue";
 import ModalEdit from "~/components/organisms/ModalEdit.vue";
+import ModalDelete from "~/components/organisms/ModalDelete.vue";
 
-@Component({ components: { SearchForm, ResultList, ModalEdit } })
+@Component({ components: { SearchForm, ResultList, ModalEdit, ModalDelete } })
 export default class IndexPaage extends Vue {
   private loading: boolean = false;
   private items: ResultData[] = [];
@@ -60,9 +76,15 @@ export default class IndexPaage extends Vue {
   private identifer: number = 0;
   private error: string = "";
 
+  // modalEdit
   private modalEditActive: boolean = false;
   private modalEditItem: object = {};
   private modalEditError: string = "";
+
+  // modalDelete
+  private modalDeleteActive: boolean = false;
+  private modalDeleteItem: object = {};
+  private modalDeleteError: string = "";
 
   // ****************************************************
   // * computed
@@ -75,13 +97,13 @@ export default class IndexPaage extends Vue {
     console.info(`onConfirm: request=${JSON.stringify(request, null, 2)}`);
     try {
       this.loading = true;
-      // const res = await this.$axios.post("/api/select", request);
-      const res = require("../../.dummy/data.json");
+      const res = await this.$axios.post("/api/select", request);
+      // const res = require("../../.dummy/data.json");
 
       this.items = res.data.result;
       this.req = request;
-      // this.hasNext = res.data.result.length > 0;
-      this.hasNext = false;
+      this.hasNext = res.data.result.length > 0;
+      // this.hasNext = false;
 
       this.identifer += 1;
       this.error = "";
@@ -107,6 +129,9 @@ export default class IndexPaage extends Vue {
 
   private async onClickDel(item: any) {
     console.info(`onClickDel: item=${JSON.stringify(item, null, 2)}`);
+    this.modalDeleteActive = true;
+    this.modalDeleteItem = item;
+    this.modalDeleteError = "";
   }
 
   // ****************************************************
@@ -121,7 +146,15 @@ export default class IndexPaage extends Vue {
 
       const last = this.items[this.items.length - 1];
       const order = this.req.orderField;
-      const lastId = !!order ? last.data[order] : last.id;
+
+      let lastId;
+      if (!!order) {
+        lastId = last.data[order];
+      } else if (!!this.req.whereField) {
+        lastId = last.data[this.req.whereField];
+      } else {
+        lastId = last.id;
+      }
       const param = Object.assign({}, this.req, { lastId: lastId });
 
       const res = await this.$axios.post("/api/select", param);
@@ -150,7 +183,7 @@ export default class IndexPaage extends Vue {
     let res;
     try {
       this.loading = true;
-      res = await this.$axios.post("/api/update", request);
+      res = await this.$axios.post("/api/delete", request);
 
       // apply changes
       const index = this.items.findIndex(v => v.id === request.docId);
@@ -167,6 +200,34 @@ export default class IndexPaage extends Vue {
       } else {
         console.error(`Error: ${error}`, error);
         this.modalEditError = `${error}`;
+      }
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  private async del(request: DeleteRequest) {
+    console.info(`del: ${JSON.stringify(request, null, 2)}`);
+    if (!request.collection || !request.docId) return;
+
+    let res;
+    try {
+      this.loading = true;
+      res = await this.$axios.post("/api/delete", request);
+
+      // apply changes
+      const index = this.items.findIndex(v => v.id === request.docId);
+      this.items.splice(index, 1);
+
+      this.modalDeleteActive = false;
+      this.modalDeleteError = "";
+    } catch (error) {
+      if (!!error.response) {
+        console.error(`Error: ${error.response.data.msg}`, error.response);
+        this.modalDeleteError = `${error.response.data.msg}`;
+      } else {
+        console.error(`Error: ${error}`, error);
+        this.modalDeleteError = `${error}`;
       }
     } finally {
       this.loading = false;

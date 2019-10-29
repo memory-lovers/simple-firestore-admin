@@ -14,7 +14,14 @@
               <option :value="op" :key="op">{{op}}</option>
             </template>
           </b-select>
-          <b-input v-model="whereValue" size="is-small"></b-input>
+
+          <InputFieldType v-model="whereValue" :type="whereType" />
+
+          <b-select v-model="whereType" size="is-small">
+            <template v-for="type in fieldTypes">
+              <option :value="type" :key="type">{{type}}</option>
+            </template>
+          </b-select>
         </b-field>
       </b-field>
 
@@ -47,19 +54,27 @@
 <script lang="ts">
 import { Component, Vue, Prop, Emit } from "nuxt-property-decorator";
 import { SearchFormItem } from "~/types";
-import { WHERE_OP, ORDER_TYPE } from "~/src/enums";
+import { WHERE_OP, ORDER_TYPE, FIELD_TYPE } from "~/src/enums";
+import InputFieldType from "~/components/atom/InputFieldType.vue";
+import { strFieldValue } from "~/src/FieldValueHelper";
 
-@Component
+@Component({ components: { InputFieldType } })
 export default class SearchForm extends Vue {
   @Prop({ default: false }) loading!: boolean;
 
   private whereOps: WHERE_OP[] = [WHERE_OP.EQ, WHERE_OP.LT, WHERE_OP.GT];
   private orderTypes: ORDER_TYPE[] = [ORDER_TYPE.ASC, ORDER_TYPE.DESC];
+  private fieldTypes: FIELD_TYPE[] = [
+    FIELD_TYPE.STR,
+    FIELD_TYPE.NUM,
+    FIELD_TYPE.BOOL
+  ];
 
   private collection: string = "";
   private whereField: string = "";
   private whereOp: WHERE_OP = WHERE_OP.EQ;
   private whereValue: string = "";
+  private whereType: FIELD_TYPE = FIELD_TYPE.STR;
 
   private orderField: string = "";
   private orderType: ORDER_TYPE | null = null;
@@ -70,7 +85,8 @@ export default class SearchForm extends Vue {
   private get preview() {
     let preview = `collection("${this.collection}")`;
     if (!!this.whereField && !!this.whereValue) {
-      preview += `where("${this.whereField}", "${this.whereOp}", "${this.whereValue}")`;
+      const val = strFieldValue(this.whereType, this.whereValue);
+      preview += `where("${this.whereField}", "${this.whereOp}", ${val})`;
     }
     if (!!this.orderField && !!this.orderType) {
       preview += `orderBy("${this.orderField}", "${this.orderType}")`;
@@ -94,7 +110,10 @@ export default class SearchForm extends Vue {
     if (!!this.whereField && !!this.whereValue) {
       item.whereField = this.whereField;
       item.whereOp = this.whereOp;
-      item.whereValue = this.whereValue;
+      item.whereValue =
+        this.whereType === FIELD_TYPE.NUM
+          ? Number(this.whereValue)
+          : this.whereValue;
     }
 
     if (!!this.orderField && !!this.orderType) {

@@ -1,7 +1,7 @@
 <template>
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title">Update</p>
+      <p class="modal-card-title">UPDATE</p>
     </header>
     <section class="modal-card-body">
       <div class="notification is-danger" v-if="!!error">
@@ -142,10 +142,6 @@ export default class ModalEdit extends Vue {
   // ****************************************************
   // * methods: onClick
   // ****************************************************
-  private onClickConfirm() {
-    if (!!this.item) this.sendConfirmEdit();
-  }
-
   private onSelectField(data: UpdateParamData, selected: string) {
     console.info(`onSelectField: selected=${selected}`);
     if (selected in this.flattenData) {
@@ -159,10 +155,10 @@ export default class ModalEdit extends Vue {
   // * emit
   // ****************************************************
   @Emit("confirmEdit")
-  private sendConfirmEdit(): UpdateRequest {
+  private onClickConfirm(): UpdateRequest {
     return {
-      collection: !!this.item ? this.item.collection : "",
-      docId: !!this.item ? this.item.id : "",
+      collection: this.item.collection,
+      docId: this.item.id,
       param: this.dataList.map(v => {
         if (v.type === FIELD_TYPE.NUM) v.value = Number(v.value);
         return v;
@@ -175,7 +171,6 @@ export default class ModalEdit extends Vue {
   // ****************************************************
   @Watch("item")
   private onChangeItem() {
-    this.item.collection = "books"
     this.dataList = [Object.assign({}, DEFAUT_ITEM)];
     this.flattenData = flatten(this.item.data);
   }
@@ -201,7 +196,7 @@ export default class ModalEdit extends Vue {
   }
 }
 
-// ****************************
-// * Flex Layout
-// ****************************
+.modal-card-foot {
+  justify-content: flex-end;
+}
 </style>

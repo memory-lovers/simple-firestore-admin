@@ -1,5 +1,4 @@
 import { FIELD_TYPE } from "./enums";
-import { type } from "os";
 
 export function getFieldTypeValue(type: FIELD_TYPE, value: string): any {
   if (type === FIELD_TYPE.STR) return value;

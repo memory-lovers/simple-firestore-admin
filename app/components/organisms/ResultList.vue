@@ -13,26 +13,28 @@
     <b-table
       :data="items"
       :loading="loading"
-      :total="total"
+      :total="items.length"
       paginated
       backend-pagination
       :per-page="parPage"
+      :current-page="page"
       pagination-position="both"
       detailed
-      detail-key="id"
-      default-sort="id"
+      :detail-key="docId"
+      :default-sort="docId"
       mobile-cards
+      narrowed
       @page-change="onPageChange"
     >
       <template slot-scope="props">
         <template v-for="field in allFields">
           <b-table-column
-            :field="field == 'id' ? field : `data.${field}`"
+            :field="field == docId ? field : `data.${field}`"
             :label="field.toUpperCase()"
             sortable
-            :key="field == 'id' ? field : `data.${field}`"
+            :key="field == docId ? field : `data.${field}`"
             :visible="fields.indexOf(field) > -1"
-          >{{ field == 'id' ? props.row.id : props.row.data[field] }}</b-table-column>
+          >{{ field == docId ? props.row.id : props.row.data[field] }}</b-table-column>
         </template>
 
         <b-table-column field="action" label="Action" width="110">
@@ -72,26 +74,24 @@ export default class ResultList extends Vue {
   @Prop({ default: false }) hasNext!: boolean;
   @Prop({ default: 0 }) identifer!: number;
 
+  private docId: string = "docId";
+
   private parPage: number = 20;
   private page: number = 1;
-  private fields: string[] = ["id"];
+  private fields: string[] = [this.docId];
   private filteredFields: string[] = [];
   private allFields: string[] = [];
 
   // ****************************************************
   // * computed
   // ****************************************************
-  private get total() {
-    if (this.hasNext) return this.items.length + this.parPage;
-    else return this.items.length;
-  }
 
   // ****************************************************
   // * methods
   // ****************************************************
   private async onPageChange(page: number) {
     this.page = page;
-    if (this.page != 1 && this.items.length < (this.page - 1) * this.parPage) {
+    if (page != 1 && this.items.length / this.parPage <= page) {
       this.sendLoad();
     }
   }
@@ -124,10 +124,11 @@ export default class ResultList extends Vue {
   @Watch("identifer")
   private onChangeIdentifer() {
     if (this.items.length > 0) {
-      this.allFields = ["id"].concat(Object.keys(this.items[0].data));
+      this.allFields = [this.docId].concat(Object.keys(this.items[0].data));
     } else {
-      this.allFields = ["id"];
+      this.allFields = [this.docId];
     }
+    this.page = 1;
   }
 }
 </script>

@@ -1,5 +1,5 @@
 import { firestore } from "firebase-admin";
-import { FIELD_TYPE } from "~/enums";
+import { FIELD_TYPE, WHERE_OP } from "~/enums";
 import {
   SearchFormItem,
   SearchResult,
@@ -16,16 +16,28 @@ const db = admin.firestore();
 export async function fetchSelect(form: SearchFormItem, size: number = 100): Promise<SearchResult> {
   // set query
   let query = db.collection(form.collection).limit(size);
-  if (!!form.orderField) {
+  if (!!form.orderField && !!form.whereField) {
+    // using where and order
+    query = query.where(form.whereField, form.whereOp, form.whereValue);
+    query = query.orderBy(form.orderField, form.orderType);
+    if (!!form.lastId) query = query.startAfter(form.lastId);
+  } else if (!!form.whereField) {
+    // using where only
+    query = query.where(form.whereField, form.whereOp, form.whereValue);
+    if (form.whereOp === WHERE_OP.EQ) {
+      query = query.orderBy(admin.firestore.FieldPath.documentId());
+      if (!!form.lastId) return query.startAfter(form.lastId);
+    } else {
+      query = query.orderBy(form.whereField);
+      if (!!form.lastId) query = query.startAfter(form.lastId);
+    }
+  } else if (!!form.orderField) {
+    // using order only
     query = query.orderBy(form.orderField, form.orderType);
     if (!!form.lastId) query = query.startAfter(form.lastId);
   } else {
     query = query.orderBy(admin.firestore.FieldPath.documentId());
     if (!!form.lastId) return query.startAfter(form.lastId);
-  }
-
-  if (!!form.whereField) {
-    query = query.where(form.whereField, form.whereOp, form.whereValue);
   }
 
   // execute query

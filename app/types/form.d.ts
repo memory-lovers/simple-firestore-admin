@@ -5,7 +5,7 @@ export interface SearchFormItem {
 
   whereField?: string;
   whereOp?: WHERE_OP;
-  whereValue?: string;
+  whereValue?: string | number | boolean;
 
   orderField?: string;
   orderType?: ORDER_TYPE;
