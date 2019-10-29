@@ -1,5 +1,5 @@
 <template>
-  <div v-if="items.length > 0">
+  <div v-if="total">
     <b-field label="Enter some fields">
       <b-taginput
         v-model="fields"
@@ -13,7 +13,7 @@
     <b-table
       :data="items"
       :loading="loading"
-      :total="items.length"
+      :total="total"
       paginated
       backend-pagination
       :per-page="parPage"
@@ -74,7 +74,7 @@ export default class ResultList extends Vue {
   @Prop({ default: false }) hasNext!: boolean;
   @Prop({ default: 0 }) identifer!: number;
 
-  private docId: string = "docId";
+  private docId: string = "_Id";
 
   private parPage: number = 20;
   private page: number = 1;
@@ -85,6 +85,10 @@ export default class ResultList extends Vue {
   // ****************************************************
   // * computed
   // ****************************************************
+  private get total() {
+    if (!!this.items) 0;
+    return this.items.length;
+  }
 
   // ****************************************************
   // * methods
@@ -123,7 +127,7 @@ export default class ResultList extends Vue {
   // ****************************************************
   @Watch("identifer")
   private onChangeIdentifer() {
-    if (this.items.length > 0) {
+    if (!!this.items && this.items.length > 0) {
       this.allFields = [this.docId].concat(Object.keys(this.items[0].data));
     } else {
       this.allFields = [this.docId];

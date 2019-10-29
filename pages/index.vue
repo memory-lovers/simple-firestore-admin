@@ -97,16 +97,17 @@ export default class IndexPaage extends Vue {
     console.info(`onConfirm: request=${JSON.stringify(request, null, 2)}`);
     try {
       this.loading = true;
-      const res = await this.$axios.post("/api/select", request);
-      // const res = require("../../.dummy/data.json");
 
+      const res = await this.$axios.post("api/select", request);
+
+      // set response
       this.items = res.data.result;
       this.req = request;
       this.hasNext = res.data.result.length > 0;
-      // this.hasNext = false;
-
-      this.identifer += 1;
       this.error = "";
+
+      // reset ResultList
+      this.identifer += 1;
     } catch (error) {
       if (!!error.response) {
         console.error(`Error: ${error.response.data.msg}`, error.response);

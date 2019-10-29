@@ -1,24 +1,20 @@
-import * as path from "path";
-require("dotenv").config({ path: path.resolve(process.cwd(), "../.env") });
-
-import { Request, Response, Application } from "express";
-import { UpdateRequest, DeleteRequest, SearchFormItem } from "~/form";
+import { Request, Response } from "express";
 import * as HttpStatus from "http-status-codes";
+import { DeleteRequest, SearchFormItem, UpdateRequest } from "~/types";
 import * as firestore from "./modules/firestore";
 
-const bodyParser = require("body-parser");
-const express = require("express");
+import bodyParser from "body-parser";
+import express from "express";
 
-const app: Application = express();
-const port = process.env.SERVER_PORT || 8080; // default port to listen
+const app = express();
 
 // setup body-parser
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // select
-app.post("/select", async (req: Request, res: Response) => {
-  console.log(req.body);
+app.post("/api/select", async (req: Request, res: Response) => {
+  console.log(`/select: ${req.body}`);
   try {
     const item: SearchFormItem = req.body;
 
@@ -28,6 +24,7 @@ app.post("/select", async (req: Request, res: Response) => {
     }
 
     const result = await firestore.fetchSelect(item);
+    console.log(`/select: result`, result);
     res.send(result);
   } catch (error) {
     console.error(`Error: ${error}`, error);
@@ -37,7 +34,7 @@ app.post("/select", async (req: Request, res: Response) => {
 });
 
 // update
-app.post("/update", async (req: Request, res: Response) => {
+app.post("/api/update", async (req: Request, res: Response) => {
   console.log(req.body);
   try {
     const item: UpdateRequest = req.body;
@@ -48,6 +45,7 @@ app.post("/update", async (req: Request, res: Response) => {
     }
 
     await firestore.update(item);
+    console.log(`/update: OK`);
     res.send(HttpStatus.OK);
   } catch (error) {
     console.error(`Error: ${error}`, error);
@@ -57,7 +55,7 @@ app.post("/update", async (req: Request, res: Response) => {
 });
 
 // delete
-app.post("/delete", async (req: Request, res: Response) => {
+app.post("/api/delete", async (req: Request, res: Response) => {
   console.log(req.body);
   try {
     const item: DeleteRequest = req.body;
@@ -69,6 +67,7 @@ app.post("/delete", async (req: Request, res: Response) => {
     }
 
     await firestore.del(item);
+    console.log(`/delete: OK`);
     res.send(HttpStatus.OK);
   } catch (error) {
     console.error(`Error: ${error}`, error);
@@ -77,7 +76,4 @@ app.post("/delete", async (req: Request, res: Response) => {
   }
 });
 
-// start the Express server
-app.listen(port, () => {
-  console.log(`server started at http://localhost:${port}`);
-});
+export default app;
