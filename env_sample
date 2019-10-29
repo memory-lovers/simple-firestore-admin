@@ -1,0 +1,4 @@
+# Copy this file with file name '.env'
+
+## ex. CREDENTIAL_PATH=./credential.json
+CREDENTIAL_PATH=YOUR_CREDENTIAL_PATH
