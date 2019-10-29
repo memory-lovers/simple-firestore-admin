@@ -142,6 +142,6 @@ export default class ResultList extends Vue {
 
 <style lang="scss" scoped>
 .preview-detail {
-  max-width: 96vw;
+  max-width: 90vw;
 }
 </style>
