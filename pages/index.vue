@@ -141,17 +141,7 @@ export default class IndexPaage extends Vue {
       if (!this.hasNext || !this.req) return;
 
       const last = this.items[this.items.length - 1];
-      const order = this.req.orderField;
-
-      let lastId;
-      if (!!order) {
-        lastId = last.data[order];
-      } else if (!!this.req.whereField) {
-        lastId = last.data[this.req.whereField];
-      } else {
-        lastId = last.id;
-      }
-      const param = Object.assign({}, this.req, { lastId: lastId });
+      const param = Object.assign({}, this.req, { lastItem: last });
 
       const res = await this.$axios.post("/api/select", param);
 

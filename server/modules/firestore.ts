@@ -13,34 +13,31 @@ const db = admin.firestore();
 /**
  * select
  */
-export async function fetchSelect(
-  req: SelectRequest,
-  size: number = 100
-): Promise<SelectResponse> {
+export async function fetchSelect(req: SelectRequest, size: number = 100): Promise<SelectResponse> {
   // set query
   let query = db.collection(req.collection).limit(size);
   if (!!req.orderField && !!req.whereField) {
     // using where and order
     query = query.where(req.whereField, req.whereOp, req.whereValue);
     query = query.orderBy(req.orderField, req.orderType);
-    if (!!req.lastId) query = query.startAfter(req.lastId);
+    if (!!req.lastItem) query = query.startAfter(req.lastItem.data[req.orderField]);
   } else if (!!req.whereField) {
     // using where only
     query = query.where(req.whereField, req.whereOp, req.whereValue);
     if (req.whereOp === WHERE_OP.EQ) {
       query = query.orderBy(admin.firestore.FieldPath.documentId());
-      if (!!req.lastId) return query.startAfter(req.lastId);
+      if (!!req.lastItem) query = query.startAfter(req.lastItem.id);
     } else {
       query = query.orderBy(req.whereField);
-      if (!!req.lastId) query = query.startAfter(req.lastId);
+      if (!!req.lastItem) query = query.startAfter(req.lastItem.data[req.whereField]);
     }
   } else if (!!req.orderField) {
     // using order only
     query = query.orderBy(req.orderField, req.orderType);
-    if (!!req.lastId) query = query.startAfter(req.lastId);
+    if (!!req.lastItem) query = query.startAfter(req.lastItem.data[req.orderField]);
   } else {
     query = query.orderBy(admin.firestore.FieldPath.documentId());
-    if (!!req.lastId) return query.startAfter(req.lastId);
+    if (!!req.lastItem) query = query.startAfter(req.lastItem.id);
   }
 
   // execute query

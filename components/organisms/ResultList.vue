@@ -33,12 +33,12 @@
             :field="field == docId ? field : `data.${field}`"
             :label="field.toUpperCase()"
             :sortable="field != docId "
-            :key="`${field}_${index}`"
+            :key="`${field}_${index}_${identifer}`"
             :visible="fields.indexOf(field) > -1"
           >{{ field == docId ? props.row.id : props.row.data[field] }}</b-table-column>
         </template>
 
-        <b-table-column field="action" label="Action" width="110">
+        <b-table-column field="action" :key="`action_${identifer}`" label="Action" width="110">
           <b-button
             type="is-info"
             :loading="loading"

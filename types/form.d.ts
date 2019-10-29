@@ -9,7 +9,7 @@ export interface SelectRequest {
 
   orderField?: string;
   orderType?: ORDER_TYPE;
-  lastId?: any;
+  lastItem?: DocData;
 }
 
 export interface DocData {
