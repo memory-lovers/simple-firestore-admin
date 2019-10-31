@@ -34,7 +34,7 @@ $ cp env_sample .env
 
 2. place your private key
 
-please place your private key; ex `./credential.json`, same location as `.evn`
+please place your private key; ex `./credential.json`, same location as `.env`
 
 if you don't have private key, you can generate form Firebase Console.  
 Plese see [Firebase Official Document](https://firebase.google.com/docs/admin/setup#initialize_the_sdk).
