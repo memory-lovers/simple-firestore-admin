@@ -22,7 +22,7 @@
     "firebase-admin": "^8.6.1",
     "flat": "^5.0.0",
     "http-status-codes": "^1.4.0",
-    "nuxt": "^2.0.0",
+    "nuxt": "^2.16.3",
     "nuxt-buefy": "^0.3.2",
     "nuxt-property-decorator": "^2.5.0"
   },
