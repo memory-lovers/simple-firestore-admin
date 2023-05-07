@@ -20,7 +20,7 @@
     "express": "^4.17.1",
     "firebase": "^7.2.2",
     "firebase-admin": "^8.6.1",
-    "flat": "^5.0.0",
+    "flat": "^5.0.1",
     "http-status-codes": "^1.4.0",
     "nuxt": "^2.0.0",
     "nuxt-buefy": "^0.3.2",
